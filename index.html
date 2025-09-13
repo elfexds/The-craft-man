@@ -2,7 +2,6 @@
 <html lang="es">
   <head>
     <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
     <title>Unity WebGL Juego</title>
     <style>
@@ -86,13 +85,12 @@
     </div>
 
     <script>
-      const buildUrl = "https://cdn.jsdelivr.net/gh/elfexds/The-craft-man@main";
-      const loaderUrl = buildUrl + "/UnityLoader.js";
+      const loaderUrl = "UnityLoader.js";
 
       const config = {
-        dataUrl: buildUrl + "/game.data.unityweb",
-        frameworkUrl: buildUrl + "/game.wasm.framework.unityweb",
-        codeUrl: buildUrl + "/game.wasm.code.unityweb",
+        dataUrl: "game.data.unityweb",
+        frameworkUrl: "game.wasm.framework.unityweb",
+        codeUrl: "game.wasm.code.unityweb",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "DefaultCompany",
         productName: "MyGame",
