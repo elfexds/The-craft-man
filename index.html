@@ -1,131 +1,123 @@
 <!DOCTYPE html>
-<html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-    <title>Unity WebGL Juego</title>
-    <style>
-      html, body {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        overflow: hidden;
-        background: #000;
-        font-family: sans-serif;
-      }
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
+<title>The Craft Man</title>
 
-      #unity-container {
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #000;
-      }
+<!-- BASE PATH (NO @main) -->
+<base href="https://cdn.jsdelivr.net/gh/elfexds/The-craft-man/">
 
-      #unity-canvas {
-        width: 100%;
-        height: 100%;
-        background: #000;
-      }
+<style>
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  overflow: hidden;
+  font-family: Arial, Helvetica, sans-serif;
+}
 
-      #unity-loading-bar {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: absolute;
-        top: 0;
-        left: 0;
-        background: #111;
-        z-index: 10;
-      }
+/* GAME HOLDER */
+#unity-container {
+  position: fixed;
+  inset: 0;
+}
 
-      #unity-progress-bar-empty {
-        width: 50%;
-        height: 20px;
-        background: #444;
-        border-radius: 10px;
-        overflow: hidden;
-      }
+#unity-canvas {
+  width: 100%;
+  height: 100%;
+  background: #231F20;
+}
 
-      #unity-progress-bar-full {
-        width: 0%;
-        height: 100%;
-        background: #09f;
-      }
+/* LOADER */
+#loader {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
 
-      #unity-warning {
-        position: absolute;
-        bottom: 10px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(255, 255, 255, 0.9);
-        color: #000;
-        padding: 5px 10px;
-        border-radius: 5px;
-        font-size: 14px;
-        display: none;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="unity-container">
-      <canvas id="unity-canvas"></canvas>
-      <div id="unity-loading-bar">
-        <div id="unity-progress-bar-empty">
-          <div id="unity-progress-bar-full"></div>
-        </div>
-      </div>
-      <div id="unity-warning"></div>
-    </div>
+#title {
+  color: #fff;
+  font-size: 40px;
+  letter-spacing: 4px;
+  margin-bottom: 12px;
+}
 
-    <script>
-      const loaderUrl = "UnityLoader.js";
+#logo {
+  width: 180px;
+  margin-bottom: 8px;
+}
 
-      const config = {
-        dataUrl: "game.data.unityweb",
-        frameworkUrl: "game.wasm.framework.unityweb",
-        codeUrl: "game.wasm.code.unityweb",
-        streamingAssetsUrl: "StreamingAssets",
-        companyName: "DefaultCompany",
-        productName: "MyGame",
-        productVersion: "1.0",
-        decompressionFallback: true
-      };
+#by {
+  color: #aaa;
+  font-size: 14px;
+  margin-bottom: 24px;
+}
 
-      const canvas = document.querySelector("#unity-canvas");
-      const loadingBar = document.querySelector("#unity-loading-bar");
-      const progressBarFull = document.querySelector("#unity-progress-bar-full");
-      const warningBanner = document.querySelector("#unity-warning");
+/* LOADING BAR */
+#bar-bg {
+  width: 360px;
+  height: 14px;
+  background: #111;
+  border-radius: 20px;
+  overflow: hidden;
+}
 
-      function unityShowBanner(msg, type) {
-        warningBanner.style.display = "block";
-        warningBanner.innerHTML = msg;
-        if (type === "error") warningBanner.style.background = "red";
-        else if (type === "warning") warningBanner.style.background = "yellow";
-        else warningBanner.style.background = "rgba(255,255,255,0.9)";
-      }
+#bar {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #00f0ff, #00ff88);
+  transition: width .25s ease;
+}
+</style>
+</head>
 
-      // Cargar el loader
-      const script = document.createElement("script");
-      script.src = loaderUrl;
-      script.onload = () => {
-        createUnityInstance(canvas, config, (progress) => {
-          progressBarFull.style.width = (100 * progress) + "%";
-        }).then((unityInstance) => {
-          loadingBar.style.display = "none";
-          console.log("Juego cargado ✅");
-        }).catch((message) => {
-          alert("Error al cargar el juego: " + message);
-          console.error(message);
-        });
-      };
-      document.body.appendChild(script);
-    </script>
-  </body>
+<body>
+
+<div id="unity-container">
+  <canvas id="unity-canvas"></canvas>
+</div>
+
+<div id="loader">
+  <div id="title">THE CRAFT MAN</div>
+
+  <!-- HOHO GAMES LOGO (JSDELIVR) -->
+  <img id="logo" src="https://cdn.jsdelivr.net/gh/elfexds/liftbreak/logo.png">
+
+  <div id="by">by HOHO GAMES</div>
+
+  <div id="bar-bg"><div id="bar"></div></div>
+</div>
+
+<!-- UNITY LOADER -->
+<script src="UnityLoader.js"></script>
+<script>
+const canvas = document.getElementById("unity-canvas");
+const bar = document.getElementById("bar");
+const loader = document.getElementById("loader");
+
+createUnityInstance(canvas, {
+  dataUrl: "game.data.unityweb",
+  frameworkUrl: "game.wasm.framework.unityweb",
+  codeUrl: "game.wasm.code.unityweb",
+  streamingAssetsUrl: "StreamingAssets",
+  companyName: "HOHO GAMES",
+  productName: "The Craft Man",
+  productVersion: "1.0"
+}, (progress) => {
+  bar.style.width = Math.max(progress * 100, 5) + "%";
+}).then(() => {
+  loader.style.display = "none";
+}).catch((err) => {
+  alert(err);
+});
+</script>
+
+</body>
 </html>
